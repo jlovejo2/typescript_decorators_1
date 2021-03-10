@@ -22,7 +22,7 @@ export default class APIServer {
     this._app = express();
 
     // Set port
-    this._app.set("PORT", process.env.PORT || 3000)
+    this._app.set("port", process.env.PORT || 3000)
 
     //Add Middleware
     this.configureMiddleware()
@@ -46,7 +46,7 @@ export default class APIServer {
   public start() {
     //Start the server instance
     this._server = this._app.listen(this._app.get("port"), () => {
-      console.log("Server is running on port " + this._app.get("PORT"));
+      console.log("Server is running on port " + this._app.get("port"));
     })
   }
 }

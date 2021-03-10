@@ -13,6 +13,23 @@ class APIRoutes {
     }
   }
 
+  @logRoute()
+  @route("get", "/people")
+  public peopleRoute(req: Request, res: Response) {
+    return {
+      people: [
+        {
+          "firstName": "David",
+          "lastName": "Tucker"
+        },
+        {
+          "firstName": "Sammy",
+          "lastName": "Davis"
+        }
+      ]
+    }
+  }
+
 }
 
 function route(method: string, path: string): MethodDecorator {

@@ -1,0 +1,23 @@
+{
+  "name": "typescript_decorators_1",
+  "version": "1.0.0",
+  "description": "repo exploring use of typescript decorators",
+  "main": "app.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jlovejo2/typescript_decorators_1.git"
+  },
+  "author": "James Lovejoy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jlovejo2/typescript_decorators_1/issues"
+  },
+  "homepage": "https://github.com/jlovejo2/typescript_decorators_1#readme",
+  "devDependencies": {
+    "typescript": "^4.2.3"
+  },
+  "dependencies": {}
+}

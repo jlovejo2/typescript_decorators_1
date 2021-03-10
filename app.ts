@@ -15,6 +15,7 @@ class APIRoutes {
 
   @logRoute()
   @route("get", "/people")
+  @authenticate("123456")
   public peopleRoute(req: Request, res: Response) {
     return {
       people: [
@@ -52,6 +53,24 @@ function logRoute(): MethodDecorator {
       console.log(`${req.url} ${req.method} Called`);
       //return the original function
       return original.apply(this, args);
+    }
+  }
+}
+function authenticate(key: string): MethodDecorator {
+  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    const original = descriptor.value
+    //wrap original function with function checks if headers has an apiKey that matches key arguement passed into decorator factory
+    descriptor.value = function (...args: any[]) {
+      const req = args[0] as Request;
+      const res = args[1] as Response;
+      const headers = req.headers
+      console.log('headers: ', headers)
+      if (headers.hasOwnProperty('apikey') && headers.apikey == key) {
+        //continue and call original function
+        return original.apply(this, args);
+      }
+      // if key doesn't match return 403 status
+      res.status(403).json({error: "Not Authorized"})
     }
   }
 }

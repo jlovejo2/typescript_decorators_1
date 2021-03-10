@@ -5,6 +5,7 @@ const server = new APIServer();
 
 class APIRoutes {
 
+  @logRoute()
   @route("get", "/")
   public indexRoute(req: Request, res: Response) {
     return {
@@ -22,6 +23,19 @@ function route(method: string, path: string): MethodDecorator {
     server.app[method](path, (req: Request, res: Response) => {
       res.status(200).json(descriptor.value(req, res));
     })
+  }
+}
+
+function logRoute(): MethodDecorator {
+  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    const original = descriptor.value
+    //wrap the original function with a function. In that function log to console
+    descriptor.value = function (...args: any[]) {
+      let req = args[0] as Request;
+      console.log(`${req.url} ${req.method} Called`);
+      //return the original function
+      return original.apply(this, args);
+    }
   }
 }
 

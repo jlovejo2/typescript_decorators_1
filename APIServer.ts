@@ -2,6 +2,7 @@ import * as http from 'http';
 import express, { Request, Response, Express } from 'express';
 import BaseEntity from './entities/BaseEntity';
 import bodyParser from 'body-parser';
+import EntityRouter from './EntityRouter';
 
 export default class APIServer {
   
@@ -43,13 +44,18 @@ export default class APIServer {
   }
 
   public addEntity<T extends BaseEntity>(clazz) {
-    //need to implement
+    // get name of entity
+    const name = Reflect.getMetadata("entity:name", clazz);
+    // pass into new entity router instance
+    let entityRouter = new EntityRouter<T>(name, clazz)
+    // configure express to use that name for route
+    this._app.use(`/${name}`, entityRouter.router)
   }
 
   public start() {
-    this._server = this._app.listen(this.app.get("port", () => {
-      console.log("Server is running on port" + this._app.get("port"))
-    }))
+    this._server = this._app.listen(this._app.get("port"), () => {
+      console.log("Server is running on port " + this._app.get("port"))
+    })
   }
 
 }

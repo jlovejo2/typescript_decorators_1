@@ -6,6 +6,7 @@
         "module": "commonjs",
         "esModuleInterop": true,
         "outDir": "out",
-        "sourceMap": true
+        // "rootDir": "Routes_Project/**/*",
+        "sourceMap": true,
     }
 }

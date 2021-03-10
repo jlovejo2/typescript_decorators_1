@@ -1,30 +1,28 @@
 import * as http from 'http';
 import express, { Request, Response, Express } from 'express';
-import bodyParser from "body-parser";
+import BaseEntity from './entities/BaseEntity';
+import bodyParser from 'body-parser';
 
 export default class APIServer {
-
-  // exposing the app value which is the actual express instance
-  private _app: Express
+  
+  private _app: Express;
 
   get app(): Express {
-    return this._app
+    return this._app;
   }
 
-  // expose the server instance
   private _server: http.Server;
 
   get server(): http.Server {
-    return this._server;
+    return this._server
   }
-  
+
   constructor() {
     this._app = express();
 
-    // Set port
+    //Set Port
     this._app.set("port", process.env.PORT || 3000)
 
-    //Add Middleware
     this.configureMiddleware()
   }
 
@@ -41,12 +39,17 @@ export default class APIServer {
       res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Origin,Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers,Authorization")
       next();
     })
+  
+  }
+
+  public addEntity<T extends BaseEntity>(clazz) {
+    //need to implement
   }
 
   public start() {
-    //Start the server instance
-    this._server = this._app.listen(this._app.get("port"), () => {
-      console.log("Server is running on port " + this._app.get("port"));
-    })
+    this._server = this._app.listen(this.app.get("port", () => {
+      console.log("Server is running on port" + this._app.get("port"))
+    }))
   }
+
 }

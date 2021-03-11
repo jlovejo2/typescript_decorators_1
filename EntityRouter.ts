@@ -2,7 +2,7 @@ import { db } from './app';
 import * as uuid from 'uuid';
 import express, { Router, Request, Response } from 'express';
 import BaseEntity, { EntityTypeInstance, EntityFactory } from './entities/BaseEntity';
-import { logRoute } from './decorators';
+import { logRoute, validate } from './decorators';
 export default class EntityRouter<T extends BaseEntity> {
   
   private _router: Router;
@@ -62,7 +62,16 @@ export default class EntityRouter<T extends BaseEntity> {
   private createEntity(req: Request, res: Response) {
     // create new persistence obj based on what is passed in
     let newEntity = EntityFactory.formPersistenceObject<T>(req.body, this.classRef);
-    // getting the id property 
+    
+    // validate the entity and send back any errors if the entity doesn't pass validation
+    let errorMap = validate(newEntity)
+    if (Object.keys(errorMap).length > 0) {
+      const output = { errors: errorMap }
+      res.status(400).json(output);
+      return;
+    }
+    
+    // getting the id property
     const idProperty = Reflect.getMetadata("entity:id", newEntity);
     // setting id value getting uuid
     newEntity[idProperty] = uuid.v4();

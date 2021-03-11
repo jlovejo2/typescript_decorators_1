@@ -34,6 +34,8 @@ export function validate(object: any) {
       }
     }
   }
+
+  return errorMap;
 }
 
 //decorator that calls addVAlidation method
@@ -81,7 +83,7 @@ function addValidation(target: any, propertyKey: string, validator: ValidationFu
   }
 
   // get list of validation rules
-  let validators: ValidationRule[] = Reflect.getMetadata("validation:rules", target, propertyKey)
+  let validators: ValidationRule[] = Reflect.getMetadata("validation:rules", target, propertyKey) || []
   // make new rule based on what was passed in
   let validationRule = {
     validator: validator,

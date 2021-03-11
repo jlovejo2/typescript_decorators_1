@@ -2,7 +2,7 @@ import { db } from './app';
 import * as uuid from 'uuid';
 import express, { Router, Request, Response } from 'express';
 import BaseEntity, { EntityTypeInstance, EntityFactory } from './entities/BaseEntity';
-
+import { logRoute } from './decorators';
 export default class EntityRouter<T extends BaseEntity> {
   
   private _router: Router;
@@ -44,18 +44,21 @@ export default class EntityRouter<T extends BaseEntity> {
     })
   }
 
+  @logRoute
   private fetchAllEntities(req: Request, res: Response) {
     let data = {}
     data = db.getData(`/${this.name}`);
     res.json(data);
   }
 
+  @logRoute
   private fetchEntity(req: Request, res: Response) {
     let data = {}
     data = db.getData(`/${this.name}/${req.params.id}`);
     res.json(data);
   }
 
+  @logRoute
   private createEntity(req: Request, res: Response) {
     // create new persistence obj based on what is passed in
     let newEntity = EntityFactory.formPersistenceObject<T>(req.body, this.classRef);
@@ -69,6 +72,7 @@ export default class EntityRouter<T extends BaseEntity> {
     res.status(200).json(newEntity)
   }
 
+  @logRoute
   private updateEntity(req: Request, res: Response) {
     // does entity exist in db?
     let data = {}
@@ -92,6 +96,7 @@ export default class EntityRouter<T extends BaseEntity> {
     res.json(data);
   }
 
+  @logRoute
   private deleteEntity(req: Request, res: Response) {
     db.delete(`/${this.name}/${req.params.id}`)
     res.json({})

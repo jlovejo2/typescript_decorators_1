@@ -99,6 +99,14 @@ export default class EntityRouter<T extends BaseEntity> {
       updatedObj[propKey] = updatedData[propKey]
     }
 
+    // validate the updated entity and send back any errors if the entity doesn't pass validation
+    let errorMap = validate(updatedObj)
+    if (Object.keys(errorMap).length > 0) {
+      const output = { errors: errorMap }
+      res.status(400).json(output);
+      return;
+    }
+
     //save and return data
     db.push(`/${this.name}/${req.params.id}`, updatedData, false)
     data = db.getData(`/${this.name}/${req.params.id}`)

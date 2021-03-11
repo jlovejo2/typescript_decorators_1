@@ -12,13 +12,9 @@ export class EntityFactory {
     const idProperty = Reflect.getMetadata("entity:id", output);
     // grab the object that is passed in (this object is what is pulled from the db in this case)
     const props = Object.keys(obj);
+
     //loop over the properties and populated the new instance of the class
-    console.log('in form persistence obj: ')
-    console.log('obj: ', obj)
     for (let prop of props) {
-      console.log('prop: ', prop)
-      console.log('id property: ', idProperty)
-      console.log('persistedProperties: ', persistedProperties)
       if (persistedProperties.includes(prop) || prop == idProperty) {
         output[prop] = obj[prop]
       } else {

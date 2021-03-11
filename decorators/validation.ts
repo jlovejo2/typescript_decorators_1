@@ -9,6 +9,33 @@ interface ValidationRule {
   validator: ValidationFunction;
 }
 
+export function validate(object: any) {
+  //get keys back and define empty errorMap
+  const keys = Reflect.getMetadata("validation:properties", object) as string[];
+  let errorMap = {};
+
+  // if keys isnt populated correctly
+  if (!keys || !Array.isArray(keys)) {
+    return errorMap;
+  }
+
+  // loop over those keys and get our rules
+  // if it isn't an array we will continue otherwise, we will run each of the rule
+  for (const key of keys) {
+    const rules: ValidationRule[] = Reflect.getMetadata("validation:rules", object, key) as ValidationRule[]
+    if (!Array.isArray(rules)) {
+      continue;
+    }
+    for (const rule of rules) {
+      const errorMessage = rule.validator(object, key, rule.validationOptions)
+      if (errorMessage) {
+        errorMap[key] = errorMap[key] || [];
+        errorMap[key].push(errorMessage);
+      }
+    }
+  }
+}
+
 //decorator that calls addVAlidation method
 export function isEmail(target: any, propertyKey: string) {
   addValidation(target, propertyKey, emailValidator);

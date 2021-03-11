@@ -40,15 +40,16 @@ export function auth(requiredRole: string) {
 }
 
 function getUserDetails(authHeader: string): UserDetails {
-  const base64Auth = (authHeader || '').split('')[1] || ''
+  const base64Auth = (authHeader || '').split(' ')[1] || ''
   //read base 64 string in auth header
   const strauth = Buffer.from(base64Auth, 'base64').toString()
   const splitIndex = strauth.indexOf(':')
   const username = strauth.substring(0, splitIndex)
   const password = strauth.substring(splitIndex + 1);
+
   return {
-    username,
-    password
+    username: username,
+    password: password
   }
 }
 
@@ -70,7 +71,7 @@ function doesUserHavePermissions(entityName: string, requiredRole: string, authH
   const users = db.getData('/users')
   const details = getUserDetails(authHeader)
   //what are the user roles?
-  const userRoles = users[details.username].pernmissions[entityName]
+  const userRoles = users[details.username].permissions[entityName]
   if (!userRoles) {
     return false;
   }
